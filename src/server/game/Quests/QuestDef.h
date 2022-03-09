@@ -18,6 +18,9 @@
 #ifndef AZEROTHCORE_QUEST_H
 #define AZEROTHCORE_QUEST_H
 
+// @tswow-begin
+#include "TSEvents.h"
+// @tswow-end
 #include "DBCEnums.h"
 #include "DatabaseEnv.h"
 #include "Define.h"
@@ -311,6 +314,10 @@ public:
     uint32 DetailsEmoteDelay[QUEST_EMOTE_COUNT];
     uint32 OfferRewardEmote[QUEST_EMOTE_COUNT];
     uint32 OfferRewardEmoteDelay[QUEST_EMOTE_COUNT];
+
+    // @tswow-begin
+    TSQuestEvents* events = nullptr;
+    // @tswow-end
 
     [[nodiscard]] uint32 GetReqItemsCount() const { return _reqItemsCount; }
     [[nodiscard]] uint32 GetReqCreatureOrGOcount() const { return _reqCreatureOrGOcount; }

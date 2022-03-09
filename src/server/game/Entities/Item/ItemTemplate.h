@@ -18,6 +18,10 @@
 #ifndef _ITEMPROTOTYPE_H
 #define _ITEMPROTOTYPE_H
 
+ // @tswow-begin
+#include "TSEntity.h"
+#include "TSEvents.h"
+// @tswow-end
 #include "Common.h"
 #include "SharedDefines.h"
 #include "WorldPacket.h"
@@ -702,6 +706,10 @@ struct ItemTemplate
     uint32 MaxMoneyLoot;
     uint32 FlagsCu;
     WorldPacket queryData; // pussywizard
+    // @tswow-begin
+    TSItemEvents* events = nullptr;
+    TSEntity m_tsEntity;
+    // @tswow-end
 
     // helpers
     [[nodiscard]] bool HasSignature() const

@@ -18,6 +18,10 @@
 #ifndef AZEROTHCORE_CREATUREDATA_H
 #define AZEROTHCORE_CREATUREDATA_H
 
+ // @tswow-begin
+#include "TSEvents.h"
+#include "TSEntity.h"
+// @tswow-end
 #include "Cell.h"
 #include "Common.h"
 #include "DBCEnums.h"
@@ -242,6 +246,10 @@ struct CreatureTemplate
     WorldPacket queryData; // pussywizard
     [[nodiscard]] uint32  GetRandomValidModelId() const;
     [[nodiscard]] uint32  GetFirstValidModelId() const;
+    // @tswow-begin
+    TSCreatureEvents* events = nullptr;
+    TSEntity m_tsEntity;
+    // @tswow-end
 
     // helpers
     [[nodiscard]] SkillType GetRequiredLootSkill() const

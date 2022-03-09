@@ -254,7 +254,11 @@ target_link_libraries(scripts
 target_include_directories(scripts
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${PUBLIC_INCLUDES})
+    ${PUBLIC_INCLUDES}
+    #tswow-begin
+    ${TSWOW_INCLUDES}
+    #tswow-end
+    )
 
 set_target_properties(scripts
   PROPERTIES

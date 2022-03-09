@@ -231,6 +231,9 @@ Map::Map(uint32 id, uint32 InstanceId, uint8 SpawnMode, Map* _parent) :
     m_unloadTimer(0), m_VisibleDistance(DEFAULT_VISIBILITY_DISTANCE),
     _instanceResetPeriod(0), m_activeNonPlayersIter(m_activeNonPlayers.end()),
     _transportsUpdateIter(_transports.end()), i_scriptLock(false), _defaultLight(GetDefaultMapLight(id))
+    // @tswow-begin
+    , i_mapExtra(GetMapDataExtra(id))
+    // @tswow-end
 {
     m_parentMap = (_parent ? _parent : this);
     for (unsigned int idx = 0; idx < MAX_NUMBER_OF_GRIDS; ++idx)

@@ -18,6 +18,13 @@
 #ifndef ACORE_MAP_H
 #define ACORE_MAP_H
 
+ // @tswow-begin
+#include "TSMap.h"
+#include "TSEvents.h"
+#include "TSEntity.h"
+#include "TSJson.h"
+#include "TSWorldEntity.h"
+// @tswow-end
 #include "Cell.h"
 #include "DBCStructure.h"
 #include "DataMap.h"
@@ -307,6 +314,13 @@ public:
     ~Map() override;
 
     [[nodiscard]] MapEntry const* GetEntry() const { return i_mapEntry; }
+
+    // @tswow-begin
+    TSMapDataExtra* GetExtraData() { return i_mapExtra; }
+    TSWorldEntity<TSMap> m_tsWorldEntity;
+    TSEntity m_tsEntity;
+    std::vector < std::function<void(TSMap, TSMapManager)>> m_delayCallbacks;
+    // @tswow-end
 
     // currently unused for normal maps
     bool CanUnload(uint32 diff)
@@ -683,6 +697,9 @@ protected:
     std::shared_mutex MMapLock;
 
     MapEntry const* i_mapEntry;
+    // @tswow-begin
+    TSMapDataExtra* i_mapExtra;
+    // @tswow-end
     uint8 i_spawnMode;
     uint32 i_InstanceId;
     uint32 m_unloadTimer;

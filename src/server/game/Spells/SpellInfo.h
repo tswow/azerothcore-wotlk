@@ -18,6 +18,10 @@
 #ifndef _SPELLINFO_H
 #define _SPELLINFO_H
 
+ // @tswow-begin
+#include "TSEvents.h"
+#include "TSEntity.h"
+// @tswow-end
 #include "DBCStructure.h"
 #include "Object.h"
 #include "SharedDefines.h"
@@ -246,8 +250,10 @@ private:
 class SpellEffectInfo
 {
     SpellInfo const* _spellInfo;
-    uint8 _effIndex;
+//@tswow-begin make _effIndex public
 public:
+    uint8 _effIndex;
+//@tswow-end make _effIndex public
     uint32    Effect;
     uint32    ApplyAuraName;
     uint32    Amplitude;
@@ -390,6 +396,10 @@ public:
     std::array<SpellEffectInfo, MAX_SPELL_EFFECTS> Effects;
     uint32 ExplicitTargetMask;
     SpellChainNode const* ChainEntry;
+    // @tswow-begin
+    TSSpellEvents* events = nullptr;
+    TSEntity m_tsEntity;
+    // @tswow-end
 
     // Mine
     AuraStateType _auraState;

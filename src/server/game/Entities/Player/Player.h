@@ -18,6 +18,9 @@
 #ifndef _PLAYER_H
 #define _PLAYER_H
 
+ // @tswow-begin
+#include "TSCustomPacket.h"
+// @tswow-end
 #include "ArenaTeam.h"
 #include "Battleground.h"
 #include "CharacterCache.h"
@@ -1041,6 +1044,10 @@ class Player : public Unit, public GridObject<Player>
 public:
     explicit Player(WorldSession* session);
     ~Player() override;
+
+    // @tswow-begin
+    TSServerBuffer m_msg_buffer;
+    // @tswow-end
 
     void CleanupsBeforeDelete(bool finalCleanup = true) override;
 

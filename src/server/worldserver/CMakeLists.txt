@@ -50,6 +50,9 @@ CollectIncludeDirectories(
 target_include_directories(worldserver
   PUBLIC
     ${PUBLIC_INCLUDES}
+    # tswow-begin
+    ${TSWOW_INCLUDES}
+    # tswow-end
   PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -57,6 +60,9 @@ target_link_libraries(worldserver
   PRIVATE
     acore-core-interface
   PUBLIC
+    # tswow-begin
+    nlohmann_json::nlohmann_json
+    # tswow-end
     modules
     scripts
     game

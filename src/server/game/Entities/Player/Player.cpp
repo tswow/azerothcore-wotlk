@@ -15,6 +15,16 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+ // @tswow-begin
+#include "TSMacros.h"
+#include "TSEvents.h"
+#include "TSQuest.h"
+#include "TSPlayer.h"
+#include "TSCreature.h"
+#include "TSItem.h"
+#include "TSGameObject.h"
+#include "TSCorpse.h"
+// @tswow-end
 #include "Player.h"
 #include "AccountMgr.h"
 #include "AchievementMgr.h"
@@ -148,6 +158,9 @@ static uint32 copseReclaimDelay[MAX_DEATH_COUNT] = { 30, 60, 120 };
 #pragma warning(disable:4355)
 #endif
 Player::Player(WorldSession* session): Unit(true), m_mover(this)
+// @tswow-begin
+  , m_msg_buffer(TSPlayer(this))
+// @tswow-end
 {
 #ifdef _MSC_VER
 #pragma warning(default:4355)

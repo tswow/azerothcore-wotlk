@@ -18,6 +18,11 @@
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
+ // @tswow-begin
+#include "TSWorldObject.h"
+#include "TSEntity.h"
+#include "TSWorldEntity.h"
+// @tswow-end
 #include "Common.h"
 #include "DataMap.h"
 #include "G3D/Vector3.h"
@@ -90,6 +95,10 @@ class Object
 {
 public:
     virtual ~Object();
+
+    // @tswow-begin
+    TSEntity m_tsEntity;
+    // @tswow-end
 
     [[nodiscard]] bool IsInWorld() const { return m_inWorld; }
 
@@ -380,6 +389,14 @@ protected:
     explicit WorldObject(bool isWorldObject); //note: here it means if it is in grid object list or world object list
 public:
     ~WorldObject() override;
+
+    // @tswow-begin
+    TSCollisions m_tsCollisions;
+    TSWorldEntity<TSWorldObject> m_tsWorldEntity;
+    std::set<TSWorldObjectGroup*> m_tsGroups;
+    void RemoveFromAllGroups();
+    uint64_t m_phase_id = 0;
+    // @tswow-end
 
     virtual void Update(uint32 /*time_diff*/);
 

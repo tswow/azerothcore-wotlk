@@ -620,7 +620,11 @@ protected:
     bool m_BuffChange;
     bool m_IsRandom;
 
+// @tswow-begin
+public:
     BGHonorMode m_HonorMode;
+protected:
+// @tswow-end
     int32 m_TeamScores[PVP_TEAMS_COUNT];
 
     ArenaTeamScore _arenaTeamScores[PVP_TEAMS_COUNT];

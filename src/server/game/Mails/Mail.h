@@ -151,7 +151,11 @@ private:
     std::string m_subject;
     std::string m_body;
 
+// @tswow-begin make public
+public:
     MailItemMap m_items;                                // Keep the items in a map to avoid duplicate guids (which can happen), store only low part of guid
+private:
+// @tswow-end
 
     uint32 m_money;
     uint32 m_COD;

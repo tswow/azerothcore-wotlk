@@ -10,6 +10,8 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #
 
+
+
 CU_RUN_HOOK(BEFORE_GAME_LIBRARY)
 
 CollectSourceFiles(
@@ -42,18 +44,42 @@ target_link_libraries(game-interface
     shared)
 
 add_library(game STATIC
-  ${PRIVATE_SOURCES})
+  ${PRIVATE_SOURCES}
+  #tswow-begin
+  ${TSWOW_SOURCES}
+  #tswow-end
+  )
 
 add_dependencies(game revision.h)
 
 target_include_directories(game
   PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR})
+    ${CMAKE_CURRENT_BINARY_DIR}
+    #tswow-begin
+    ${TSWOW_INCLUDES}
+    #tswow-end
+  )
+
+#tswow-begin
+FILE(GLOB TSWOW_PUBLIC ${TSWOW_CORE_PUBLIC}/*)
+FILE(GLOB TSWOW_PRIVATE ${TSWOW_CORE_PRIVATE}/*)
+FILE(GLOB TSWOW_MESSAGES ${TSWOW_MESSAGES_INCLUDES}/*)
+
+# todo linux
+target_compile_definitions(game PUBLIC AZEROTHCORE=1)
+
+source_group("tswow-messages" FILES ${TSWOW_MESSAGES})
+source_group("tswow-public" FILES ${TSWOW_PUBLIC})
+source_group("tswow-private" FILES ${TSWOW_PRIVATE})
+# tswow-end
 
 target_link_libraries(game
   PRIVATE
     acore-core-interface
   PUBLIC
+    # tswow-begin
+    nlohmann_json::nlohmann_json
+    # tswow-end
     game-interface)
 
 set_target_properties(game

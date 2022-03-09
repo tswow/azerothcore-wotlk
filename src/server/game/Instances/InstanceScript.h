@@ -268,7 +268,11 @@ protected:
 private:
     static void LoadObjectData(ObjectData const* creatureData, ObjectInfoMap& objectInfo);
 
+// @tswow-begin
+public:
     std::vector<BossInfo> bosses;
+private:
+// @tswow-end
     DoorInfoMap doors;
     MinionInfoMap minions;
     ObjectInfoMap _creatureInfo;

@@ -282,13 +282,15 @@ const Position TSDistCheckPos = {1009.29f, 163.15f, 628.157f, 0.0f};
 const Position TSSindragosaPos1 = {919.10f, 249.83f, 556.34f, 5.49f};
 const Position TSSindragosaPos2 = {948.39f, 215.47f, 653.71f, 5.51f};
 
-struct TSPosition
+// @tswow-begin 
+struct TSCPosition
 {
     uint32 entry;
     float x, y;
 };
 
-const TSPosition TSData[] =
+const TSCPosition TSData[] =
+// @tswow-end
 {
     { NPC_FREED_SLAVE_3_HORDE, 1047.8f, 126.01f },
     { NPC_FREED_SLAVE_3_HORDE, 1049.21f, 127.10f },

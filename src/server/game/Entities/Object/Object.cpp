@@ -1178,6 +1178,9 @@ void WorldObject::AddToWorld()
 
 void WorldObject::RemoveFromWorld()
 {
+    // @tswow-begin
+    RemoveFromAllGroups();
+    // @tswow-end
     if (!IsInWorld())
         return;
 
@@ -3108,3 +3111,15 @@ GuidUnorderedSet const& WorldObject::GetAllowedLooters() const
 {
     return _allowedLooters;
 }
+
+// @tswow-begin
+void WorldObject::RemoveFromAllGroups()
+{
+    for (auto& group : m_tsGroups)
+    {
+        group->RemovedByObject(TSWorldObject(this));
+    }
+    m_tsGroups.clear();
+    m_tsWorldEntity.m_groups.ClearGroups();
+}
+// @tswow-end

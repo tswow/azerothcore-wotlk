@@ -18,6 +18,9 @@
 #ifndef AZEROTHCORE_GAMEOBJECT_H
 #define AZEROTHCORE_GAMEOBJECT_H
 
+ // @tswow-begin
+#include "TSEvents.h"
+// @tswow-end
 #include "Common.h"
 #include "DatabaseEnv.h"
 #include "G3D/Quat.h"
@@ -401,6 +404,11 @@ struct GameObjectTemplate
     std::string AIName;
     uint32 ScriptId;
     bool IsForQuests; // pussywizard
+
+    // @tswow-begin
+    TSGameObjectEvents* events = nullptr;
+    TSEntity m_tsEntity;
+    // @tswow-end
 
     // helpers
     [[nodiscard]] bool IsDespawnAtAction() const
