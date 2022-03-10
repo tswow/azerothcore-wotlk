@@ -22,6 +22,9 @@ Comment: All reload related commands
 Category: commandscripts
 EndScriptData */
 
+// @tswow-begin
+#include "TSLibLoader.h"
+// @tswow-end
 #include "AchievementMgr.h"
 #include "AuctionHouseMgr.h"
 #include "BattlegroundMgr.h"
@@ -164,6 +167,9 @@ public:
             { "waypoint_data",                 HandleReloadWpCommand,                         SEC_ADMINISTRATOR, Console::Yes },
             { "vehicle_accessory",             HandleReloadVehicleAccessoryCommand,           SEC_ADMINISTRATOR, Console::Yes },
             { "vehicle_template_accessory",    HandleReloadVehicleTemplateAccessoryCommand,   SEC_ADMINISTRATOR, Console::Yes },
+            // @tswow-begin
+            { "livescripts",                   HandleReloadLivescripts,                       SEC_ADMINISTRATOR, Console::Yes },
+            // @tswow-end
         };
         static ChatCommandTable commandTable =
         {
@@ -171,6 +177,14 @@ public:
         };
         return commandTable;
     }
+
+    // @tswow-begin
+    static bool HandleReloadLivescripts(ChatHandler* handler, char const* args)
+    {
+        UpdateTSLibraries(std::string(args) == "force");
+        return true;
+    }
+    // @tswow-end
 
     //reload commands
     static bool HandleReloadGMTicketsCommand(ChatHandler* /*handler*/)

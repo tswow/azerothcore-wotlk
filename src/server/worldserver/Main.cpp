@@ -19,6 +19,10 @@
 /// @{
 /// \file
 
+// @tswow-begin
+#include "TSLibLoader.h"
+#include "TSEventLoader.h"
+// @swow-end
 #include "ACSoap.h"
 #include "AppenderDB.h"
 #include "AsyncAcceptor.h"
@@ -128,6 +132,9 @@ void usage(const char* prog)
 /// Launch the Azeroth server
 int main(int argc, char** argv)
 {
+    // @tswow-begin
+    SetBinPath(argv[0]);
+    // @tswow-end
     Acore::Impl::CurrentServerProcessHolder::_type = SERVER_PROCESS_WORLDSERVER;
     signal(SIGABRT, &Acore::AbortHandler);
 
@@ -379,6 +386,10 @@ int main(int argc, char** argv)
     });
 
     // Set server online (allow connecting now)
+    // @tswow-begin
+    TSInitializeEvents();
+    UpdateTSLibraries(false);
+    // @tswow-end
     LoginDatabase.DirectExecute("UPDATE realmlist SET flag = flag & ~{}, population = 0 WHERE id = '{}'", REALM_FLAG_VERSION_MISMATCH, realm.Id.Realm);
     realm.PopulationLevel = 0.0f;
     realm.Flags = RealmFlags(realm.Flags & ~uint32(REALM_FLAG_VERSION_MISMATCH));
