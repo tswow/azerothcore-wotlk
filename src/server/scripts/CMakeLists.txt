@@ -206,6 +206,9 @@ foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
 
     target_include_directories(${SCRIPT_MODULE_PROJECT_NAME}
       PUBLIC
+        #tswow-begin
+        ${TSWOW_INCLUDES}
+        #tswow-end
         ${CMAKE_CURRENT_SOURCE_DIR})
 
     set_target_properties(${SCRIPT_MODULE_PROJECT_NAME}
