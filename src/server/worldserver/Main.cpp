@@ -133,6 +133,8 @@ void usage(const char* prog)
 int main(int argc, char** argv)
 {
     // @tswow-begin
+    setbuf(stdout, 0);
+    setbuf(stderr, 0);
     SetBinPath(argv[0]);
     // @tswow-end
     Acore::Impl::CurrentServerProcessHolder::_type = SERVER_PROCESS_WORLDSERVER;
