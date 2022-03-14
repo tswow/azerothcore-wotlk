@@ -513,6 +513,13 @@ namespace lfg
         uint32 rDungeonId = 0;
         bool isContinue = grp && grp->isLFGGroup() && GetState(gguid) != LFG_STATE_FINISHED_DUNGEON;
 
+        // @tswow-begin sanitize role
+        roles &= PLAYER_ROLE_ANY;
+        roles &= sObjectMgr->GetPlayerClassRoleMask(player->getClass());
+        if (!(roles & (PLAYER_ROLE_TANK | PLAYER_ROLE_HEALER | PLAYER_ROLE_DAMAGE)))
+            return;
+        // @tswow-end
+
         if (grp && (grp->isBGGroup() || grp->isBFGroup()))
             return;
 
@@ -1397,6 +1404,17 @@ namespace lfg
         LfgRoleCheckContainer::iterator itRoleCheck = RoleChecksStore.find(gguid);
         if (itRoleCheck == RoleChecksStore.end())
             return;
+
+        // tswow-begin: Sanitize input roles
+        roles &= PLAYER_ROLE_ANY;
+        if (guid)
+        {
+            Player* player = ObjectAccessor::FindPlayer(guid);
+            if (!player)
+                return;
+            roles &= sObjectMgr->GetPlayerClassRoleMask(player->getClass());
+        }
+        // @tswow-end
 
         LfgRoleCheck& roleCheck = itRoleCheck->second;
         bool sendRoleChosen = roleCheck.state != LFG_ROLECHECK_DEFAULT && guid;

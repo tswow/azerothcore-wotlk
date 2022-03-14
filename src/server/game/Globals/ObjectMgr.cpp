@@ -9812,6 +9812,52 @@ uint32 ObjectMgr::GetQuestMoneyReward(uint8 level, uint32 questMoneyDifficulty) 
 }
 
 // @tswow-begin
+uint8 ObjectMgr::GetPlayerClassRoleMask(uint32 cls)
+{
+    return cls <= _playerClassRoles.size()
+        ? _playerClassRoles[cls - 1]
+        : 0;
+}
+
+void ObjectMgr::LoadPlayerClassRoles()
+{
+    uint32 oldMSTime = getMSTime();
+    uint32 count = 0;
+    _playerClassRoles.clear();
+    QueryResult result = WorldDatabase.Query(
+        //           0        1       2         3         4
+        "SELECT `class`, `tank`, `healer`, `damage`, `leader`"
+        " FROM `player_class_roles`;"
+    );
+    if (result && result->GetRowCount() > 0)
+    {
+        do {
+            Field* field = result->Fetch();
+            uint32 clazz = field[0].Get<uint32>();
+            bool tank = field[1].Get<bool>();
+            bool healer = field[2].Get<bool>();
+            bool damage = field[3].Get<bool>();
+            bool leader = field[4].Get<bool>();
+            uint32 mask = 0;
+            if (leader)
+                mask |= lfg::LfgRoles::PLAYER_ROLE_LEADER;
+            if (tank)
+                mask |= lfg::LfgRoles::PLAYER_ROLE_TANK;
+            if (healer)
+                mask |= lfg::LfgRoles::PLAYER_ROLE_HEALER;
+            if (damage)
+                mask |= lfg::LfgRoles::PLAYER_ROLE_DAMAGE;
+
+            if (clazz > _playerClassRoles.size())
+            {
+                _playerClassRoles.resize(clazz);
+            }
+            _playerClassRoles[clazz - 1] = mask;
+        } while (result->NextRow());
+    }
+    LOG_INFO("server.loading", ">> Loaded %u Instance doors %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+}
+
 void ObjectMgr::LoadSpellAutolearn()
 {
     uint32 oldMSTime = getMSTime();

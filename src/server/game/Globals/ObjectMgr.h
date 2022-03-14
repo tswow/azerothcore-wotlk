@@ -416,6 +416,7 @@ struct SpellAutoLearn
     uint32 classmask;
 };
 typedef std::vector<std::vector<SpellAutoLearn>> SpellAutoLearns;
+typedef std::vector<uint32> PlayerClassRoles;
 // @tswow-end
 
 struct AreaTriggerTeleport
@@ -811,6 +812,7 @@ public:
 
     // @tswow-begin
     SpellAutoLearns const& GetSpellAutolearns() { return _spellAutoLearns; }
+    uint8 GetPlayerClassRoleMask(uint32 cls);
     // @tswow-end
 
     void GetPlayerLevelInfo(uint32 race, uint32 class_, uint8 level, PlayerLevelInfo* info) const;
@@ -1100,6 +1102,7 @@ public:
     // @tswow-begin
     void LoadLanguages();
     void LoadSpellAutolearn();
+    void LoadPlayerClassRoles();
     // @tswow-end
     void AddSpellToTrainer(uint32 entry, uint32 spell, uint32 spellCost, uint32 reqSkill, uint32 reqSkillValue, uint32 reqLevel, uint32 reqSpell);
 
@@ -1523,6 +1526,7 @@ private:
 
     // @tswow-begin
     SpellAutoLearns _spellAutoLearns;
+    PlayerClassRoles _playerClassRoles;
     // @tswow-end
 
     typedef std::vector<uint32> PlayerXPperLevel;       // [level]
