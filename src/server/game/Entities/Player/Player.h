@@ -1054,6 +1054,7 @@ public:
 
     // @tswow-begin
     TSServerBuffer m_msg_buffer;
+    void ApplyAutolearnSpells(uint32 fromLevel);
     // @tswow-end
 
     void CleanupsBeforeDelete(bool finalCleanup = true) override;

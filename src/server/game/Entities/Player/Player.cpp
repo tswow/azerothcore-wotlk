@@ -613,6 +613,9 @@ bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo
     }
 
     SetUInt32Value(UNIT_FIELD_LEVEL, start_level);
+    // @tswow-begin  -- autolearn all spells from level 1 at character creation
+    ApplyAutolearnSpells(0);
+    // @tswow-end
 
     InitRunes();
 
@@ -2552,6 +2555,10 @@ void Player::GiveLevel(uint8 level)
             }
 
     SendQuestGiverStatusMultiple();
+
+    // @tswow-begin
+    ApplyAutolearnSpells(oldLevel + 1);
+    // @tswow-end
 
     sScriptMgr->OnPlayerLevelChanged(this, oldLevel);
 }
@@ -15856,3 +15863,28 @@ uint32 Player::GetSpellCooldownDelay(uint32 spell_id) const
     SpellCooldowns::const_iterator itr = m_spellCooldowns.find(spell_id);
     return uint32(itr != m_spellCooldowns.end() && itr->second.end > getMSTime() ? itr->second.end - getMSTime() : 0);
 }
+
+// @tswow-begin
+void Player::ApplyAutolearnSpells(uint32 fromLevel)
+{
+    uint32 level = getLevel();
+    if (fromLevel > level) return;
+
+    SpellAutoLearns spells = sObjectMgr->GetSpellAutolearns();
+    for (size_t i = fromLevel; i <= level; ++i)
+    {
+        if (spells.size() <= i) break;
+        for (auto const& sal : spells[i])
+        {
+            if (
+                (sal.classmask == 0 || this->getClassMask() & sal.classmask)
+                &&
+                (sal.racemask == 0 || this->getRaceMask() & sal.racemask)
+                )
+            {
+                learnSpell(sal.spell, false);
+            }
+        }
+    }
+}
+// @tswow-end

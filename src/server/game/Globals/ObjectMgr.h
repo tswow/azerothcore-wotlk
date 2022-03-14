@@ -408,6 +408,16 @@ struct SpellClickInfo
 typedef std::multimap<uint32, SpellClickInfo> SpellClickInfoContainer;
 typedef std::pair<SpellClickInfoContainer::const_iterator, SpellClickInfoContainer::const_iterator> SpellClickInfoMapBounds;
 
+// @tswow-begin
+struct SpellAutoLearn
+{
+    uint32 spell;
+    uint32 racemask;
+    uint32 classmask;
+};
+typedef std::vector<std::vector<SpellAutoLearn>> SpellAutoLearns;
+// @tswow-end
+
 struct AreaTriggerTeleport
 {
     uint32 target_mapId;
@@ -799,6 +809,10 @@ public:
 
     [[nodiscard]] PlayerInfo const* GetPlayerInfo(uint32 race, uint32 class_) const;
 
+    // @tswow-begin
+    SpellAutoLearns const& GetSpellAutolearns() { return _spellAutoLearns; }
+    // @tswow-end
+
     void GetPlayerLevelInfo(uint32 race, uint32 class_, uint8 level, PlayerLevelInfo* info) const;
 
     uint32 GetNearestTaxiNode(float x, float y, float z, uint32 mapid, uint32 teamId);
@@ -1085,6 +1099,7 @@ public:
     void LoadTrainerSpell();
     // @tswow-begin
     void LoadLanguages();
+    void LoadSpellAutolearn();
     // @tswow-end
     void AddSpellToTrainer(uint32 entry, uint32 spell, uint32 spellCost, uint32 reqSkill, uint32 reqSkillValue, uint32 reqLevel, uint32 reqSpell);
 
@@ -1505,6 +1520,10 @@ private:
     void BuildPlayerLevelInfo(uint8 race, uint8 class_, uint8 level, PlayerLevelInfo* plinfo) const;
 
     PlayerInfo* _playerInfo[MAX_RACES][MAX_CLASSES];
+
+    // @tswow-begin
+    SpellAutoLearns _spellAutoLearns;
+    // @tswow-end
 
     typedef std::vector<uint32> PlayerXPperLevel;       // [level]
     PlayerXPperLevel _playerXPperLevel;

@@ -9810,3 +9810,32 @@ uint32 ObjectMgr::GetQuestMoneyReward(uint8 level, uint32 questMoneyDifficulty) 
 
     return 0;
 }
+
+// @tswow-begin
+void ObjectMgr::LoadSpellAutolearn()
+{
+    uint32 oldMSTime = getMSTime();
+    uint32 count = 0;
+    _spellAutoLearns.clear();
+    //                                               0      1         2          3
+    QueryResult result = WorldDatabase.Query("SELECT spell, racemask, classmask, level FROM spell_autolearn");
+    if (result && result->GetRowCount() > 0)
+    {
+        do
+        {
+            Field* fields = result->Fetch();
+            uint32 spell = fields[0].Get<uint32>();
+            uint32 racemask = fields[1].Get<uint32>();
+            uint32 classmask = fields[2].Get<uint32>();
+            uint32 level = fields[3].Get<uint32>();
+            if (level >= _spellAutoLearns.size())
+            {
+                _spellAutoLearns.resize(level + 1);
+            }
+            _spellAutoLearns[level].push_back({ spell,racemask,classmask });
+            ++count;
+        } while (result->NextRow());
+    }
+    LOG_INFO("server.loading", ">> Loaded %u Autolearn spells %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+}
+// @tswow-end

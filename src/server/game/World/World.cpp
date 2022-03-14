@@ -1934,6 +1934,9 @@ void World::SetInitialWorldSettings()
     LOG_INFO("server.loading", "Loading Language definitions...");
     sObjectMgr->LoadLanguages();
 
+    LOG_INFO("server.loading", "Loading Spell Autolearn Data...");
+    sObjectMgr->LoadSpellAutolearn();
+
     LOG_INFO("server.loading", "Loading Class Stat formula overrides...");
     void LoadAPFormulas(); // todo: place in some header file
     LoadAPFormulas();
