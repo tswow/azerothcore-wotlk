@@ -223,7 +223,9 @@ bool normalizePlayerName(std::string& name)
     return true;
 }
 
-LanguageDesc lang_description[LANGUAGES_COUNT] =
+// @tswow-begin change to vector
+std::vector<LanguageDesc> lang_description =
+// @tswow-end
 {
     { LANG_ADDON,           0, 0                       },
     { LANG_UNIVERSAL,       0, 0                       },
@@ -246,9 +248,56 @@ LanguageDesc lang_description[LANGUAGES_COUNT] =
     { LANG_GOBLIN_BINARY,   0, 0                       }
 };
 
+// @tswow-begin
+void ObjectMgr::LoadLanguages()
+{
+    uint32 count = 0;
+    uint32 oldMSTime = getMSTime();
+    for (SkillLineEntry const* sl : sSkillLineStore)
+    {
+        // Check category ID
+        if (sl->categoryId != 10)
+        {
+            continue;
+        }
+
+        // Check if this skillId is already used (no duplicates)
+        for (LanguageDesc & desc : lang_description)
+        {
+            if (desc.skill_id == sl->id)
+            {
+                goto sl_finished;
+            }
+        }
+
+        // Find a skillLineAbility and then a spell from that.
+        for (SkillLineAbilityEntry const* sla : sSkillLineAbilityStore)
+        {
+            if (sla->SkillLine != sl->id)
+            {
+                continue;
+            }
+
+            SpellEntry const* spell = sSpellStore.LookupEntry(sla->Spell);
+            if (spell)
+            {
+                // todo: it won't be valid enum values
+                lang_description.push_back({ (Language)spell->EffectMiscValue[0],spell->Id,sl->id});
+                goto sl_finished;
+            }
+        }
+    sl_finished:;
+    }
+    LOG_INFO("server.loading", ">> Loaded {} Languages in {} ms", count, GetMSTimeDiffToNow(oldMSTime));
+    LOG_INFO("server.loading", " ");
+}
+// @tswow-end
+
 LanguageDesc const* GetLanguageDescByID(uint32 lang)
 {
-    for (uint8 i = 0; i < LANGUAGES_COUNT; ++i)
+    // @tswow-begin
+    for (uint8 i = 0; i < lang_description.size(); ++i)
+    // @tswow-end
     {
         if (uint32(lang_description[i].lang_id) == lang)
             return &lang_description[i];

@@ -283,7 +283,9 @@ public:
     static bool HandleLearnAllLangCommand(ChatHandler* handler)
     {
         // skipping UNIVERSAL language (0)
-        for (uint8 i = 1; i < LANGUAGES_COUNT; ++i)
+        // @tswow-begin
+        for (uint8 i = 1; i < lang_description.size(); ++i)
+        // @tswow-end
             handler->GetSession()->GetPlayer()->learnSpell(lang_description[i].spell_id);
 
         handler->SendSysMessage(LANG_COMMAND_LEARN_ALL_LANG);

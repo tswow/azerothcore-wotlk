@@ -1930,6 +1930,11 @@ void World::SetInitialWorldSettings()
     LOG_INFO("server.loading", "Loading faction change quest pairs...");
     sObjectMgr->LoadFactionChangeQuests();
 
+    // @tswow-begin
+    LOG_INFO("server.loading", "Loading Language definitions...");
+    sObjectMgr->LoadLanguages();
+    // @tswow-end
+
     LOG_INFO("server.loading", "Loading GM tickets...");
     sTicketMgr->LoadTickets();
 

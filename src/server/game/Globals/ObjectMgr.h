@@ -694,7 +694,9 @@ struct LanguageDesc
     uint32   skill_id;
 };
 
-extern LanguageDesc lang_description[LANGUAGES_COUNT];
+// @tswow-begin
+extern std::vector<LanguageDesc> lang_description;
+// @tswow-end
 LanguageDesc const* GetLanguageDescByID(uint32 lang);
 
 struct DungeonEncounter
@@ -1081,6 +1083,9 @@ public:
 
     void LoadVendors();
     void LoadTrainerSpell();
+    // @tswow-begin
+    void LoadLanguages();
+    // @tswow-end
     void AddSpellToTrainer(uint32 entry, uint32 spell, uint32 spellCost, uint32 reqSkill, uint32 reqSkillValue, uint32 reqLevel, uint32 reqSpell);
 
     std::string GeneratePetName(uint32 entry);
