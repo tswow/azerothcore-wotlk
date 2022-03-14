@@ -927,6 +927,10 @@ public:                                                 // opcodes handlers
     void HandleInstanceLockResponse(WorldPacket& recvPacket);
     void HandleUpdateMissileTrajectory(WorldPacket& recvPacket);
 
+    // @tswow-begin
+    void HandleCustom(WorldPacket& recvPacket);
+    // @tswow-end
+
     // Battlefield
     void SendBfInvitePlayerToWar(uint32 battleId, uint32 zoneId, uint32 time);
     void SendBfInvitePlayerToQueue(uint32 battleId);

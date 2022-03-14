@@ -1613,3 +1613,11 @@ void WorldSession::SendTimeSync()
     _timeSyncTimer = _timeSyncNextCounter == 0 ? 5000 : 10000;
     _timeSyncNextCounter++;
 }
+
+// @tswow-begin
+void WorldSession::HandleCustom(WorldPacket& packet)
+{
+    GetPlayer()->m_msg_buffer
+        .ReceivePacket(packet.size(), (char*)packet.contents());
+}
+// @tswow-end
