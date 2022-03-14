@@ -124,13 +124,11 @@ enum Classes
 };
 
 // max+1 for player class
-#define MAX_CLASSES       12
+// @tswow-begin enable all classes
+#define MAX_CLASSES       32
 
-#define CLASSMASK_ALL_PLAYABLE \
-    ((1<<(CLASS_WARRIOR-1))|(1<<(CLASS_PALADIN-1))|(1<<(CLASS_HUNTER-1))| \
-    (1<<(CLASS_ROGUE-1))  |(1<<(CLASS_PRIEST-1)) |(1<<(CLASS_SHAMAN-1))| \
-    (1<<(CLASS_MAGE-1))   |(1<<(CLASS_WARLOCK-1))|(1<<(CLASS_DRUID-1)) | \
-    (1<<(CLASS_DEATH_KNIGHT-1)))
+#define CLASSMASK_ALL_PLAYABLE 0xFFFFFFFF
+// @tswow-end
 
 // valid classes for creature_template.unit_class
 enum UnitClass
