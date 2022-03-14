@@ -18411,9 +18411,10 @@ uint32 Unit::GetPhaseByAuras() const
     return currentPhase;
 }
 
-void Unit::SetPhaseMask(uint32 newPhaseMask, bool update)
+// @tswow-begin phase id
+void Unit::SetPhaseMask(uint32 newPhaseMask, bool update, uint64 newPhaseId)
 {
-    if (newPhaseMask == GetPhaseMask())
+    if (newPhaseMask == GetPhaseMask() && newPhaseId == m_phase_id)
         return;
 
     if (IsInWorld())
@@ -18435,7 +18436,7 @@ void Unit::SetPhaseMask(uint32 newPhaseMask, bool update)
             {
                 if (Unit* unit = ref->GetSource()->GetOwner())
                     if (Creature* creature = unit->ToCreature())
-                        refMgr.setOnlineOfflineState(creature, creature->InSamePhase(newPhaseMask));
+                        refMgr.setOnlineOfflineState(creature, creature->InSamePhase(newPhaseMask,newPhaseId));
 
                 ref = ref->next();
             }
@@ -18453,12 +18454,12 @@ void Unit::SetPhaseMask(uint32 newPhaseMask, bool update)
 
                 for (ThreatContainer::StorageType::const_iterator itr = threatList.begin(); itr != threatList.end(); ++itr)
                     if (Unit* unit = (*itr)->getTarget())
-                        unit->getHostileRefMgr().setOnlineOfflineState(ToCreature(), unit->InSamePhase(newPhaseMask));
+                        unit->getHostileRefMgr().setOnlineOfflineState(ToCreature(), unit->InSamePhase(newPhaseMask, newPhaseId));
             }
         }
     }
 
-    WorldObject::SetPhaseMask(newPhaseMask, update);
+    WorldObject::SetPhaseMask(newPhaseMask, update, newPhaseId);
 
     if (!IsInWorld())
         return;
@@ -18468,14 +18469,15 @@ void Unit::SetPhaseMask(uint32 newPhaseMask, bool update)
         Unit* controlled = *itr;
         ++itr;
         if (controlled->GetTypeId() == TYPEID_UNIT)
-            controlled->SetPhaseMask(newPhaseMask, true);
+            controlled->SetPhaseMask(newPhaseMask, true, newPhaseId);
     }
 
     for (uint8 i = 0; i < MAX_SUMMON_SLOT; ++i)
         if (m_SummonSlot[i])
             if (Creature* summon = GetMap()->GetCreature(m_SummonSlot[i]))
-                summon->SetPhaseMask(newPhaseMask, true);
+                summon->SetPhaseMask(newPhaseMask, true, newPhaseId);
 }
+// @tswow-end
 
 void Unit::UpdateObjectVisibility(bool forced, bool /*fromUpdate*/)
 {

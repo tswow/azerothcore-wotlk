@@ -62,7 +62,9 @@ void Acore::WorldObjectSearcher<Check>::Visit(GameObjectMapType& m)
 
     for (GameObjectMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -85,7 +87,9 @@ void Acore::WorldObjectSearcher<Check>::Visit(PlayerMapType& m)
 
     for (PlayerMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -108,7 +112,9 @@ void Acore::WorldObjectSearcher<Check>::Visit(CreatureMapType& m)
 
     for (CreatureMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -131,7 +137,9 @@ void Acore::WorldObjectSearcher<Check>::Visit(CorpseMapType& m)
 
     for (CorpseMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -154,7 +162,9 @@ void Acore::WorldObjectSearcher<Check>::Visit(DynamicObjectMapType& m)
 
     for (DynamicObjectMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -173,7 +183,9 @@ void Acore::WorldObjectLastSearcher<Check>::Visit(GameObjectMapType& m)
 
     for (GameObjectMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -189,7 +201,9 @@ void Acore::WorldObjectLastSearcher<Check>::Visit(PlayerMapType& m)
 
     for (PlayerMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -205,7 +219,9 @@ void Acore::WorldObjectLastSearcher<Check>::Visit(CreatureMapType& m)
 
     for (CreatureMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -221,7 +237,9 @@ void Acore::WorldObjectLastSearcher<Check>::Visit(CorpseMapType& m)
 
     for (CorpseMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -237,7 +255,9 @@ void Acore::WorldObjectLastSearcher<Check>::Visit(DynamicObjectMapType& m)
 
     for (DynamicObjectMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -311,7 +331,9 @@ void Acore::GameObjectSearcher<Check>::Visit(GameObjectMapType& m)
 
     for (GameObjectMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -327,7 +349,9 @@ void Acore::GameObjectLastSearcher<Check>::Visit(GameObjectMapType& m)
 {
     for (GameObjectMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -339,7 +363,9 @@ template<class Check>
 void Acore::GameObjectListSearcher<Check>::Visit(GameObjectMapType& m)
 {
     for (GameObjectMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-        if (itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             if (i_check(itr->GetSource()))
                 Insert(itr->GetSource());
 }
@@ -355,7 +381,9 @@ void Acore::UnitSearcher<Check>::Visit(CreatureMapType& m)
 
     for (CreatureMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -375,7 +403,9 @@ void Acore::UnitSearcher<Check>::Visit(PlayerMapType& m)
 
     for (PlayerMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -391,7 +421,9 @@ void Acore::UnitLastSearcher<Check>::Visit(CreatureMapType& m)
 {
     for (CreatureMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -404,7 +436,9 @@ void Acore::UnitLastSearcher<Check>::Visit(PlayerMapType& m)
 {
     for (PlayerMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -416,7 +450,9 @@ template<class Check>
 void Acore::UnitListSearcher<Check>::Visit(PlayerMapType& m)
 {
     for (PlayerMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-        if (itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             if (i_check(itr->GetSource()))
                 Insert(itr->GetSource());
 }
@@ -425,7 +461,9 @@ template<class Check>
 void Acore::UnitListSearcher<Check>::Visit(CreatureMapType& m)
 {
     for (CreatureMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-        if (itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             if (i_check(itr->GetSource()))
                 Insert(itr->GetSource());
 }
@@ -441,7 +479,9 @@ void Acore::CreatureSearcher<Check>::Visit(CreatureMapType& m)
 
     for (CreatureMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -457,7 +497,9 @@ void Acore::CreatureLastSearcher<Check>::Visit(CreatureMapType& m)
 {
     for (CreatureMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -469,7 +511,9 @@ template<class Check>
 void Acore::CreatureListSearcher<Check>::Visit(CreatureMapType& m)
 {
     for (CreatureMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-        if (itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             if (i_check(itr->GetSource()))
                 Insert(itr->GetSource());
 }
@@ -478,7 +522,9 @@ template<class Check>
 void Acore::PlayerListSearcher<Check>::Visit(PlayerMapType& m)
 {
     for (PlayerMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-        if (itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             if (i_check(itr->GetSource()))
                 Insert(itr->GetSource());
 }
@@ -487,7 +533,9 @@ template<class Check>
 void Acore::PlayerListSearcherWithSharedVision<Check>::Visit(PlayerMapType& m)
 {
     for (PlayerMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-        if (itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             if (i_check(itr->GetSource(), true))
                 i_objects.push_back(itr->GetSource());
 }
@@ -496,7 +544,9 @@ template<class Check>
 void Acore::PlayerListSearcherWithSharedVision<Check>::Visit(CreatureMapType& m)
 {
     for (CreatureMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-        if (itr->GetSource()->InSamePhase(i_phaseMask) && itr->GetSource()->HasSharedVision())
+        // @tswow-begin
+        if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId) && itr->GetSource()->HasSharedVision())
+        // @tswow-end
             for (SharedVisionList::const_iterator i = itr->GetSource()->GetSharedVisionList().begin(); i != itr->GetSource()->GetSharedVisionList().end(); ++i)
                 if (i_check(*i, false))
                     i_objects.push_back(*i);
@@ -511,7 +561,9 @@ void Acore::PlayerSearcher<Check>::Visit(PlayerMapType& m)
 
     for (PlayerMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))
@@ -527,7 +579,9 @@ void Acore::PlayerLastSearcher<Check>::Visit(PlayerMapType& m)
 {
     for (PlayerMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
-        if (!itr->GetSource()->InSamePhase(i_phaseMask))
+        // @tswow-begin
+        if (!itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+        // @tswow-end
             continue;
 
         if (i_check(itr->GetSource()))

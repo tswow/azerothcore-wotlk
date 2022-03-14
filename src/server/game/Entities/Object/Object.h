@@ -432,10 +432,12 @@ public:
 
     [[nodiscard]] uint32 GetInstanceId() const { return m_InstanceId; }
 
-    virtual void SetPhaseMask(uint32 newPhaseMask, bool update);
+    // @tswow-begin
+    virtual void SetPhaseMask(uint32 newPhaseMask, bool update, uint64 newPhaseId = 0);
     [[nodiscard]] uint32 GetPhaseMask() const { return m_phaseMask; }
-    bool InSamePhase(WorldObject const* obj) const { return InSamePhase(obj->GetPhaseMask()); }
-    [[nodiscard]] bool InSamePhase(uint32 phasemask) const { return m_useCombinedPhases ? GetPhaseMask() & phasemask : GetPhaseMask() == phasemask; }
+    bool InSamePhase(WorldObject const* obj) const { return InSamePhase(obj->GetPhaseMask(), obj->m_phase_id); }
+    [[nodiscard]] bool InSamePhase(uint32 phasemask, uint64 phaseId) const { return (m_useCombinedPhases ? GetPhaseMask() & phasemask : GetPhaseMask() == phasemask) && phaseId == m_phase_id; }
+    // @tswow-end
 
     [[nodiscard]] uint32 GetZoneId() const;
     [[nodiscard]] uint32 GetAreaId() const;

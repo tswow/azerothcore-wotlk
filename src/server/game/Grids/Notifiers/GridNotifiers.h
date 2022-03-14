@@ -99,6 +99,9 @@ namespace Acore
         WorldObject const* i_source;
         WorldPacket const* i_message;
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         float i_distSq;
         TeamId teamId;
         Player const* skipped_receiver;
@@ -106,6 +109,9 @@ namespace Acore
             : i_source(src), i_message(msg), i_phaseMask(src->GetPhaseMask()), i_distSq(dist * dist)
             , teamId((own_team_only && src->GetTypeId() == TYPEID_PLAYER) ? src->ToPlayer()->GetTeamId() : TEAM_NEUTRAL)
             , skipped_receiver(skipped)
+            // @tswow-begin
+            , i_phaseId(src->m_phase_id)
+            // @tswow-end
         {
         }
         void Visit(PlayerMapType& m);
@@ -131,9 +137,15 @@ namespace Acore
         Unit* i_source;
         WorldPacket* i_message;
         uint32 i_phaseMask;
+        // @tswow_begin
+        uint32 i_phaseId;
+        // @tswow_end
         float i_distSq;
         MessageDistDelivererToHostile(Unit* src, WorldPacket* msg, float dist)
             : i_source(src), i_message(msg), i_phaseMask(src->GetPhaseMask()), i_distSq(dist * dist)
+            // @tswow_begin
+            , i_phaseId(src->m_phase_id)
+            // @tswow_end
         {
         }
         void Visit(PlayerMapType& m);
@@ -196,11 +208,18 @@ namespace Acore
     {
         uint32 i_mapTypeMask;
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint32 i_phaseId;
+        // @tswow-end
         WorldObject*& i_object;
         Check& i_check;
 
         WorldObjectSearcher(WorldObject const* searcher, WorldObject*& result, Check& check, uint32 mapTypeMask = GRID_MAP_TYPE_MASK_ALL)
-            : i_mapTypeMask(mapTypeMask), i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check) {}
+            : i_mapTypeMask(mapTypeMask), i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(GameObjectMapType& m);
         void Visit(PlayerMapType& m);
@@ -216,11 +235,18 @@ namespace Acore
     {
         uint32 i_mapTypeMask;
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         WorldObject*& i_object;
         Check& i_check;
 
         WorldObjectLastSearcher(WorldObject const* searcher, WorldObject*& result, Check& check, uint32 mapTypeMask = GRID_MAP_TYPE_MASK_ALL)
-            :  i_mapTypeMask(mapTypeMask), i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check) {}
+            :  i_mapTypeMask(mapTypeMask), i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(GameObjectMapType& m);
         void Visit(PlayerMapType& m);
@@ -236,12 +262,19 @@ namespace Acore
     {
         uint32 i_mapTypeMask;
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Check& i_check;
 
         template<typename Container>
         WorldObjectListSearcher(WorldObject const* searcher, Container& container, Check & check, uint32 mapTypeMask = GRID_MAP_TYPE_MASK_ALL)
                 : ContainerInserter<WorldObject*>(container),
-                  i_mapTypeMask(mapTypeMask), i_phaseMask(searcher->GetPhaseMask()), i_check(check) { }
+                  i_mapTypeMask(mapTypeMask), i_phaseMask(searcher->GetPhaseMask()), i_check(check)
+                // @tswow-begin
+                , i_phaseId(searcher->m_phase_id)
+                // @tswow-end
+        { }
 
         void Visit(PlayerMapType& m);
         void Visit(CreatureMapType& m);
@@ -257,17 +290,26 @@ namespace Acore
     {
         uint32 i_mapTypeMask;
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Do const& i_do;
 
         WorldObjectWorker(WorldObject const* searcher, Do const& _do, uint32 mapTypeMask = GRID_MAP_TYPE_MASK_ALL)
-            : i_mapTypeMask(mapTypeMask), i_phaseMask(searcher->GetPhaseMask()), i_do(_do) {}
+            : i_mapTypeMask(mapTypeMask), i_phaseMask(searcher->GetPhaseMask()), i_do(_do)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(GameObjectMapType& m)
         {
             if (!(i_mapTypeMask & GRID_MAP_TYPE_MASK_GAMEOBJECT))
                 return;
             for (GameObjectMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-                if (itr->GetSource()->InSamePhase(i_phaseMask))
+                // @tswow-begin
+                if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+                // @tswow-end
                     i_do(itr->GetSource());
         }
 
@@ -276,7 +318,9 @@ namespace Acore
             if (!(i_mapTypeMask & GRID_MAP_TYPE_MASK_PLAYER))
                 return;
             for (PlayerMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-                if (itr->GetSource()->InSamePhase(i_phaseMask))
+                // @tswow-begin
+                if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+                // @tswow-end
                     i_do(itr->GetSource());
         }
         void Visit(CreatureMapType& m)
@@ -284,7 +328,9 @@ namespace Acore
             if (!(i_mapTypeMask & GRID_MAP_TYPE_MASK_CREATURE))
                 return;
             for (CreatureMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-                if (itr->GetSource()->InSamePhase(i_phaseMask))
+                // @tswow-begin
+                if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+                // @tswow-end
                     i_do(itr->GetSource());
         }
 
@@ -293,7 +339,9 @@ namespace Acore
             if (!(i_mapTypeMask & GRID_MAP_TYPE_MASK_CORPSE))
                 return;
             for (CorpseMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-                if (itr->GetSource()->InSamePhase(i_phaseMask))
+                // @tswow-begin
+                if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+                // @tswow-end
                     i_do(itr->GetSource());
         }
 
@@ -302,7 +350,9 @@ namespace Acore
             if (!(i_mapTypeMask & GRID_MAP_TYPE_MASK_DYNAMICOBJECT))
                 return;
             for (DynamicObjectMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-                if (itr->GetSource()->InSamePhase(i_phaseMask))
+                // @tswow-begin
+                if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+                // @tswow-end
                     i_do(itr->GetSource());
         }
 
@@ -315,11 +365,18 @@ namespace Acore
     struct GameObjectSearcher
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         GameObject*& i_object;
         Check& i_check;
 
         GameObjectSearcher(WorldObject const* searcher, GameObject*& result, Check& check)
-            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check) {}
+            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(GameObjectMapType& m);
 
@@ -331,11 +388,18 @@ namespace Acore
     struct GameObjectLastSearcher
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         GameObject*& i_object;
         Check& i_check;
 
         GameObjectLastSearcher(WorldObject const* searcher, GameObject*& result, Check& check)
-            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check) {}
+            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(GameObjectMapType& m);
 
@@ -346,12 +410,19 @@ namespace Acore
     struct GameObjectListSearcher : ContainerInserter<GameObject*>
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Check& i_check;
 
         template<typename Container>
         GameObjectListSearcher(WorldObject const* searcher, Container& container, Check & check)
                 : ContainerInserter<GameObject*>(container),
-                  i_phaseMask(searcher->GetPhaseMask()), i_check(check) { }
+                  i_phaseMask(searcher->GetPhaseMask()), i_check(check)
+                // @tswow-begin
+                , i_phaseId(searcher->m_phase_id)
+                // @tswow-end
+        { }
 
         void Visit(GameObjectMapType& m);
 
@@ -362,12 +433,18 @@ namespace Acore
     struct GameObjectWorker
     {
         GameObjectWorker(WorldObject const* searcher, Functor& func)
-            : _func(func), _phaseMask(searcher->GetPhaseMask()) {}
+            : _func(func), _phaseMask(searcher->GetPhaseMask())
+            // @tswow-begin
+            , _phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(GameObjectMapType& m)
         {
             for (GameObjectMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-                if (itr->GetSource()->InSamePhase(_phaseMask))
+                // @tswow-begin
+                if (itr->GetSource()->InSamePhase(_phaseMask, _phaseId))
+                // @tswow-end
                     _func(itr->GetSource());
         }
 
@@ -376,6 +453,9 @@ namespace Acore
     private:
         Functor& _func;
         uint32 _phaseMask;
+        // @tswow-begin
+        uint64 _phaseId;
+        // @tswow-end
     };
 
     // Unit searchers
@@ -385,11 +465,18 @@ namespace Acore
     struct UnitSearcher
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Unit*& i_object;
         Check& i_check;
 
         UnitSearcher(WorldObject const* searcher, Unit*& result, Check& check)
-            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check) {}
+            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(CreatureMapType& m);
         void Visit(PlayerMapType& m);
@@ -402,11 +489,18 @@ namespace Acore
     struct UnitLastSearcher
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Unit*& i_object;
         Check& i_check;
 
         UnitLastSearcher(WorldObject const* searcher, Unit*& result, Check& check)
-            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check) {}
+            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(CreatureMapType& m);
         void Visit(PlayerMapType& m);
@@ -419,12 +513,19 @@ namespace Acore
     struct UnitListSearcher : ContainerInserter<Unit*>
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Check& i_check;
 
         template<typename Container>
         UnitListSearcher(WorldObject const* searcher, Container& container, Check& check)
                 : ContainerInserter<Unit*>(container),
-                  i_phaseMask(searcher->GetPhaseMask()), i_check(check) { }
+                  i_phaseMask(searcher->GetPhaseMask()), i_check(check)
+                  // @tswow-begin
+                  , i_phaseId(searcher->m_phase_id)
+                  // @tswow-end
+        { }
 
         void Visit(PlayerMapType& m);
         void Visit(CreatureMapType& m);
@@ -438,11 +539,18 @@ namespace Acore
     struct CreatureSearcher
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Creature*& i_object;
         Check& i_check;
 
         CreatureSearcher(WorldObject const* searcher, Creature*& result, Check& check)
-            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check) {}
+            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(CreatureMapType& m);
 
@@ -454,11 +562,18 @@ namespace Acore
     struct CreatureLastSearcher
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Creature*& i_object;
         Check& i_check;
 
         CreatureLastSearcher(WorldObject const* searcher, Creature*& result, Check& check)
-            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check) {}
+            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(CreatureMapType& m);
 
@@ -469,12 +584,19 @@ namespace Acore
     struct CreatureListSearcher : ContainerInserter<Creature*>
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Check& i_check;
 
         template<typename Container>
         CreatureListSearcher(WorldObject const* searcher, Container& container, Check & check)
                 : ContainerInserter<Creature*>(container),
-                  i_phaseMask(searcher->GetPhaseMask()), i_check(check) { }
+                  i_phaseMask(searcher->GetPhaseMask()), i_check(check)
+                // @tswow-begin
+                , i_phaseId(searcher->m_phase_id)
+                // @tswow-end
+        { }
 
         void Visit(CreatureMapType& m);
 
@@ -485,15 +607,24 @@ namespace Acore
     struct CreatureWorker
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Do& i_do;
 
         CreatureWorker(WorldObject const* searcher, Do& _do)
-            : i_phaseMask(searcher->GetPhaseMask()), i_do(_do) {}
+            : i_phaseMask(searcher->GetPhaseMask()), i_do(_do)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(CreatureMapType& m)
         {
             for (CreatureMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-                if (itr->GetSource()->InSamePhase(i_phaseMask))
+                // @tswow-begin
+                if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+                // @tswow-end
                     i_do(itr->GetSource());
         }
 
@@ -506,11 +637,18 @@ namespace Acore
     struct PlayerSearcher
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Player*& i_object;
         Check& i_check;
 
         PlayerSearcher(WorldObject const* searcher, Player*& result, Check& check)
-            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check) {}
+            : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(PlayerMapType& m);
 
@@ -521,12 +659,19 @@ namespace Acore
     struct PlayerListSearcher : ContainerInserter<Player*>
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Check& i_check;
 
         template<typename Container>
         PlayerListSearcher(WorldObject const* searcher, Container& container, Check & check)
                 : ContainerInserter<Player*>(container),
-                  i_phaseMask(searcher->GetPhaseMask()), i_check(check) { }
+                  i_phaseMask(searcher->GetPhaseMask()), i_check(check)
+                  // @tswow-begin
+                  , i_phaseId(searcher->m_phase_id)
+                  // @tswow-end
+        { }
 
         void Visit(PlayerMapType& m);
 
@@ -537,11 +682,18 @@ namespace Acore
     struct PlayerListSearcherWithSharedVision
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         std::list<Player*>& i_objects;
         Check& i_check;
 
         PlayerListSearcherWithSharedVision(WorldObject const* searcher, std::list<Player*>& objects, Check& check)
-            : i_phaseMask(searcher->GetPhaseMask()), i_objects(objects), i_check(check) {}
+            : i_phaseMask(searcher->GetPhaseMask()), i_objects(objects), i_check(check)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(PlayerMapType& m);
         void Visit(CreatureMapType& m);
@@ -553,10 +705,16 @@ namespace Acore
     struct PlayerLastSearcher
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Player*& i_object;
         Check& i_check;
 
         PlayerLastSearcher(WorldObject const* searcher, Player*& result, Check& check) : i_phaseMask(searcher->GetPhaseMask()), i_object(result), i_check(check)
+        // @tswow-begin
+        , i_phaseId(searcher->m_phase_id)
+        // @tswow-end
         {
         }
 
@@ -569,15 +727,24 @@ namespace Acore
     struct PlayerWorker
     {
         uint32 i_phaseMask;
+        // @tswow-begin
+        uint64 i_phaseId;
+        // @tswow-end
         Do& i_do;
 
         PlayerWorker(WorldObject const* searcher, Do& _do)
-            : i_phaseMask(searcher->GetPhaseMask()), i_do(_do) {}
+            : i_phaseMask(searcher->GetPhaseMask()), i_do(_do)
+            // @tswow-begin
+            , i_phaseId(searcher->m_phase_id)
+            // @tswow-end
+        {}
 
         void Visit(PlayerMapType& m)
         {
             for (PlayerMapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-                if (itr->GetSource()->InSamePhase(i_phaseMask))
+                // @tswow-begin
+                if (itr->GetSource()->InSamePhase(i_phaseMask, i_phaseId))
+                // @tswow-end
                     i_do(itr->GetSource());
         }
 

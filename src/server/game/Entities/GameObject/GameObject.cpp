@@ -2437,13 +2437,16 @@ void GameObject::SetDisplayId(uint32 displayid)
     UpdateModel();
 }
 
-void GameObject::SetPhaseMask(uint32 newPhaseMask, bool update)
+// @tswow-begin phase id
+void GameObject::SetPhaseMask(uint32 newPhaseMask, bool update, uint64 newPhaseId)
 {
-    WorldObject::SetPhaseMask(newPhaseMask, update);
+    WorldObject::SetPhaseMask(newPhaseMask, update, newPhaseId);
 
+    // todo: gameobject model phase?
     if (m_model && m_model->isEnabled())
         EnableCollision(true);
 }
+// @tswow-end
 
 void GameObject::EnableCollision(bool enable)
 {

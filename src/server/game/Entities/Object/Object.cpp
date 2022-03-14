@@ -2802,14 +2802,17 @@ void WorldObject::MovePositionToFirstCollision(Position& pos, float dist, float 
     pos.Relocate(destx, desty, destz);
 }
 
-void WorldObject::SetPhaseMask(uint32 newPhaseMask, bool update)
+// @tswow-begin phase id
+void WorldObject::SetPhaseMask(uint32 newPhaseMask, bool update, uint64 newPhaseId)
 {
     sScriptMgr->OnBeforeWorldObjectSetPhaseMask(this, m_phaseMask, newPhaseMask, m_useCombinedPhases, update);
     m_phaseMask = newPhaseMask;
+    m_phase_id = newPhaseId;
 
     if (update && IsInWorld())
         UpdateObjectVisibility();
 }
+// @tswow-end
 
 void WorldObject::PlayDistanceSound(uint32 sound_id, Player* target /*= nullptr*/)
 {

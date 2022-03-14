@@ -2056,7 +2056,9 @@ public:
 
     // common function for visibility checks for player/creatures with detection code
     [[nodiscard]] uint32 GetPhaseByAuras() const;
-    void SetPhaseMask(uint32 newPhaseMask, bool update) override;// overwrite WorldObject::SetPhaseMask
+    // @tswow-begin
+    void SetPhaseMask(uint32 newPhaseMask, bool update, uint64 newPhaseId = 0) override;// overwrite WorldObject::SetPhaseMask
+    // @tswow-end
     void UpdateObjectVisibility(bool forced = true, bool fromUpdate = false) override;
 
     SpellImmuneList m_spellImmune[MAX_SPELL_IMMUNITY];
