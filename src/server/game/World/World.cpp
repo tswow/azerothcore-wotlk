@@ -1941,7 +1941,7 @@ void World::SetInitialWorldSettings()
     void LoadAPFormulas(); // todo: place in some header file
     LoadAPFormulas();
 
-    TC_LOG_INFO("server.loading", "Loading Class Roles...");
+    LOG_INFO("server.loading", "Loading Class Roles...");
     sObjectMgr->LoadPlayerClassRoles();
 
     // @tswow-end
