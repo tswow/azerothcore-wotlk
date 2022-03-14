@@ -323,6 +323,21 @@ void Player::ApplyFeralAPBonus(int32 amount, bool apply)
 
 // @tswow-begin
 
+float m_diminishing_k[MAX_CLASSES] =
+{
+    0.9560f,  // Warrior
+    0.9560f,  // Paladin
+    0.9880f,  // Hunter
+    0.9880f,  // Rogue
+    0.9830f,  // Priest
+    0.9560f,  // DK
+    0.9880f,  // Shaman
+    0.9830f,  // Mage
+    0.9830f,  // Warlock
+    0.0f,     // ??
+    0.9720f   // Druid
+};
+
 float parry_cap[MAX_CLASSES] =
 {
     47.003525f,     // Warrior
@@ -820,22 +835,8 @@ void Player::UpdateAllCritPercentages()
     UpdateCritPercentage(RANGED_ATTACK);
 }
 
-// @tswow-begin
-float m_diminishing_k[MAX_CLASSES] =
+// @tswow-begin move m_diminishing_k to the top of the file
 // @tswow-end
-{
-    0.9560f,  // Warrior
-    0.9560f,  // Paladin
-    0.9880f,  // Hunter
-    0.9880f,  // Rogue
-    0.9830f,  // Priest
-    0.9560f,  // DK
-    0.9880f,  // Shaman
-    0.9830f,  // Mage
-    0.9830f,  // Warlock
-    0.0f,     // ??
-    0.9720f   // Druid
-};
 
 float Player::GetMissPercentageFromDefence() const
 {
