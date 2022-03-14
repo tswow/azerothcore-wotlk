@@ -916,6 +916,11 @@ enum PlayerCharmedAISpells
 #define MAX_PLAYER_SUMMON_DELAY                   (2*MINUTE)
 #define MAX_MONEY_AMOUNT                       (0x7FFFFFFF-1)
 
+// @tswow-begin
+TC_GAME_API extern float dodge_base[MAX_CLASSES];
+TC_GAME_API extern float crit_to_dodge[MAX_CLASSES];
+// @tswow-end
+
 struct ProgressionRequirement
 {
     uint32 id;

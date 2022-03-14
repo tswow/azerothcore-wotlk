@@ -1933,6 +1933,11 @@ void World::SetInitialWorldSettings()
     // @tswow-begin
     LOG_INFO("server.loading", "Loading Language definitions...");
     sObjectMgr->LoadLanguages();
+
+    LOG_INFO("server.loading", "Loading Class Stat formula overrides...");
+    void LoadAPFormulas(); // todo: place in some header file
+    LoadAPFormulas();
+
     // @tswow-end
 
     LOG_INFO("server.loading", "Loading GM tickets...");

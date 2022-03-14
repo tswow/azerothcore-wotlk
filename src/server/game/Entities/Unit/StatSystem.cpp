@@ -321,6 +321,146 @@ void Player::ApplyFeralAPBonus(int32 amount, bool apply)
     UpdateAttackPowerAndDamage();
 }
 
+// @tswow-begin
+
+float parry_cap[MAX_CLASSES] =
+{
+    47.003525f,     // Warrior
+    47.003525f,     // Paladin
+    145.560408f,    // Hunter
+    145.560408f,    // Rogue
+    0.0f,           // Priest
+    47.003525f,     // DK
+    145.560408f,    // Shaman
+    0.0f,           // Mage
+    0.0f,           // Warlock
+    0.0f,           // ??
+    0.0f            // Druid
+};
+
+float dodge_cap[MAX_CLASSES] =
+{
+    88.129021f,     // Warrior
+    88.129021f,     // Paladin
+    145.560408f,    // Hunter
+    145.560408f,    // Rogue
+    150.375940f,    // Priest
+    88.129021f,     // DK
+    145.560408f,    // Shaman
+    150.375940f,    // Mage
+    150.375940f,    // Warlock
+    0.0f,           // ??
+    116.890707f     // Druid
+};
+
+float miss_cap[MAX_CLASSES] =
+{
+    16.00f,     // Warrior //correct
+    16.00f,     // Paladin //correct
+    16.00f,     // Hunter  //?
+    16.00f,     // Rogue   //?
+    16.00f,     // Priest  //?
+    16.00f,     // DK      //correct
+    16.00f,     // Shaman  //?
+    16.00f,     // Mage    //?
+    16.00f,     // Warlock //?
+    0.0f,       // ??
+    16.00f      // Druid   //?
+};
+
+uint32 meleeAPFormulas[32];
+uint32 rangedAPFormulas[32];
+
+enum class ClassStatFormulaTypes : uint32 {
+    MELEE = 1,
+    RANGED = 2,
+};
+
+enum class ClassStatValueTypes : uint32 {
+    DIMINISHING_K = 1,
+    MISS_CAP = 2,
+    PARRY_CAP = 3,
+    DODGE_CAP = 4,
+    DODGE_BASE = 5,
+    CRIT_TO_DODGE = 6,
+};
+
+void LoadAPFormulas()
+{
+    for (int i = 0; i < 32; ++i)
+    {
+        meleeAPFormulas[i] = i;
+        rangedAPFormulas[i] = i;
+    }
+
+    {
+        QueryResult result = WorldDatabase.Query("SELECT * from class_stat_formulas;");
+        if (result)
+        {
+            do
+            {
+                Field* field = result->Fetch();
+                uint32 cls = field[0].Get<uint32>();
+                ClassStatFormulaTypes stat = ClassStatFormulaTypes(field[1].Get<uint32>());
+                uint32 clsOut = field[2].Get<uint32>();
+
+                if (cls >= MAX_CLASSES) {
+                    continue;
+                }
+
+                switch (stat) {
+                case ClassStatFormulaTypes::MELEE:
+                    meleeAPFormulas[cls] = clsOut;
+                    break;
+                case ClassStatFormulaTypes::RANGED:
+                    rangedAPFormulas[cls] = clsOut;
+                    break;
+                }
+            } while (result->NextRow());
+        }
+    }
+
+    {
+        QueryResult result = WorldDatabase.Query("SELECT * from class_stat_values");
+        if (result)
+        {
+            do {
+                Field* field = result->Fetch();
+                uint32 cls = field[0].Get<uint32>() - 1;
+                ClassStatValueTypes stat = ClassStatValueTypes(field[1].Get<uint32>());
+                float value = field[2].Get<float>();
+
+                if (cls >= MAX_CLASSES) {
+                    continue;
+                }
+
+                switch (stat)
+                {
+                case ClassStatValueTypes::DIMINISHING_K:
+                    m_diminishing_k[cls] = value;
+                    break;
+                case ClassStatValueTypes::DODGE_CAP:
+                    dodge_cap[cls] = value;
+                    break;
+                case ClassStatValueTypes::MISS_CAP:
+                    miss_cap[cls] = value;
+                    break;
+                case ClassStatValueTypes::PARRY_CAP:
+                    parry_cap[cls] = value;
+                    break;
+                case ClassStatValueTypes::DODGE_BASE:
+                    dodge_base[cls] = value;
+                    break;
+                case ClassStatValueTypes::CRIT_TO_DODGE:
+                    crit_to_dodge[cls] = value;
+                    break;
+                }
+            } while (result->NextRow());
+        }
+    }
+}
+// @tswow-end
+
 void Player::UpdateAttackPowerAndDamage(bool ranged)
 {
     float val2 = 0.0f;
@@ -340,7 +480,9 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
         index_mod = UNIT_FIELD_RANGED_ATTACK_POWER_MODS;
         index_mult = UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER;
 
-        switch (getClass())
+        // @tswow-begin override class to use
+        switch (rangedAPFormulas[getClass()])
+        // @tswow-end
         {
             case CLASS_HUNTER:
                 val2 = level * 2.0f + GetStat(STAT_AGILITY) - 10.0f;
@@ -369,7 +511,9 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
     }
     else
     {
-        switch (getClass())
+        // @tswow-begin override class to use
+        switch (meleeAPFormulas[getClass()])
+        // @tswow-end
         {
             case CLASS_PALADIN:
             case CLASS_DEATH_KNIGHT:
@@ -676,7 +820,9 @@ void Player::UpdateAllCritPercentages()
     UpdateCritPercentage(RANGED_ATTACK);
 }
 
-const float m_diminishing_k[MAX_CLASSES] =
+// @tswow-begin
+float m_diminishing_k[MAX_CLASSES] =
+// @tswow-end
 {
     0.9560f,  // Warrior
     0.9560f,  // Paladin
@@ -693,20 +839,8 @@ const float m_diminishing_k[MAX_CLASSES] =
 
 float Player::GetMissPercentageFromDefence() const
 {
-    float const miss_cap[MAX_CLASSES] =
-    {
-        16.00f,     // Warrior //correct
-        16.00f,     // Paladin //correct
-        16.00f,     // Hunter  //?
-        16.00f,     // Rogue   //?
-        16.00f,     // Priest  //?
-        16.00f,     // DK      //correct
-        16.00f,     // Shaman  //?
-        16.00f,     // Mage    //?
-        16.00f,     // Warlock //?
-        0.0f,       // ??
-        16.00f      // Druid   //?
-    };
+    // @tswow-begin move miss_cap to top of file
+    // @tswow-end
 
     float diminishing = 0.0f, nondiminishing = 0.0f;
     // Modify value from defense skill (only bonus from defense rating diminishes)
@@ -720,20 +854,8 @@ float Player::GetMissPercentageFromDefence() const
 
 void Player::UpdateParryPercentage()
 {
-    const float parry_cap[MAX_CLASSES] =
-    {
-        47.003525f,     // Warrior
-        47.003525f,     // Paladin
-        145.560408f,    // Hunter
-        145.560408f,    // Rogue
-        0.0f,           // Priest
-        47.003525f,     // DK
-        145.560408f,    // Shaman
-        0.0f,           // Mage
-        0.0f,           // Warlock
-        0.0f,           // ??
-        0.0f            // Druid
-    };
+    // @tswow-begin move parry_cap to top of file
+    // @tswow-end
 
     // No parry
     float value = 0.0f;
@@ -766,20 +888,8 @@ void Player::UpdateParryPercentage()
 
 void Player::UpdateDodgePercentage()
 {
-    const float dodge_cap[MAX_CLASSES] =
-    {
-        88.129021f,     // Warrior
-        88.129021f,     // Paladin
-        145.560408f,    // Hunter
-        145.560408f,    // Rogue
-        150.375940f,    // Priest
-        88.129021f,     // DK
-        145.560408f,    // Shaman
-        150.375940f,    // Mage
-        150.375940f,    // Warlock
-        0.0f,           // ??
-        116.890707f     // Druid
-    };
+    // @tswow-begin move dodge_cap to top of file
+    // @tswow-end
 
     float diminishing = 0.0f, nondiminishing = 0.0f;
     GetDodgeFromAgility(diminishing, nondiminishing);
