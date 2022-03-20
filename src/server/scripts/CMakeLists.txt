@@ -208,6 +208,11 @@ foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
       PUBLIC
         #tswow-begin
         ${TSWOW_INCLUDES}
+        ${LUA_ROOT}
+        ${sol2_SOURCE_DIR}/include
+        ${sourcemap_SOURCE_DIR}/src
+        ${sourcemap_SOURCE_DIR}/deps/json
+        ${sourcemap_SOURCE_DIR}/deps/cencode
         #tswow-end
         ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -260,6 +265,11 @@ target_include_directories(scripts
     ${PUBLIC_INCLUDES}
     #tswow-begin
     ${TSWOW_INCLUDES}
+    ${LUA_ROOT}
+    ${sol2_SOURCE_DIR}/include
+    ${sourcemap_SOURCE_DIR}/src
+    ${sourcemap_SOURCE_DIR}/deps/json
+    ${sourcemap_SOURCE_DIR}/deps/cencode
     #tswow-end
     )
 
