@@ -59,6 +59,15 @@ else()
   message(STATUS "MSVC: Enabled SSE2 support")
 endif()
 
+if((PLATFORM EQUAL 64) OR (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.0.23026.0) OR BUILD_SHARED_LIBS)
+  # Enable extended object support
+  target_compile_options(acore-compile-option-interface
+    INTERFACE
+      /bigobj)
+
+  message(STATUS "MSVC: Enabled increased number of sections in object files")
+endif()
+
 # Set build-directive (used in core to tell which buildtype we used)
 # msbuild/devenv don't set CMAKE_MAKE_PROGRAM, you can choose build type from a dropdown after generating projects
 if("${CMAKE_MAKE_PROGRAM}" MATCHES "MSBuild")
