@@ -759,7 +759,9 @@ public:
     int32 m_timer;
 
     SpellEvent* _spellEvent;
+public:
     TriggerCastFlags _triggeredCastFlags;
+private:
 
     // if need this can be replaced by Aura copy
     // we can't store original aura link to prevent access to deleted auras
