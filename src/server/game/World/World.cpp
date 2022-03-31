@@ -19,6 +19,10 @@
     \ingroup world
 */
 
+// @tswow-begin
+#include "TSLibLoader.h"
+#include "TSEventLoader.h"
+// @tswow-end
 #include "World.h"
 #include "AccountMgr.h"
 #include "AchievementMgr.h"
@@ -439,6 +443,10 @@ void World::LoadConfigSettings(bool reload)
     // Set realm id and enable db logging
     sLog->SetRealmId(realm.Id.Realm);
 
+    // @tswow-begin
+    TSInitializeEvents();
+    UpdateTSLibraries(false);
+    // @tswow-end
     sScriptMgr->OnBeforeConfigLoad(reload);
 
     // load update time related configs
