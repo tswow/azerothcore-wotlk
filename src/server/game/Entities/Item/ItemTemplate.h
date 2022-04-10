@@ -707,6 +707,7 @@ struct ItemTemplate
     uint32 FlagsCu;
     WorldPacket queryData; // pussywizard
     // @tswow-begin
+    bool m_isDirty = false;
     TSItemEvents* events = nullptr;
     TSEntity m_tsEntity;
     // @tswow-end
