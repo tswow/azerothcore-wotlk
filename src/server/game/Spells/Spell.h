@@ -284,6 +284,9 @@ class Spell
 {
     friend void Unit::SetCurrentCastedSpell(Spell* pSpell);
     friend class SpellScript;
+    // @tswow-begin
+    friend class TSSpell;
+    // @tswow-end
 public:
     Spell(Unit* caster, SpellInfo const* info, TriggerCastFlags triggerFlags, ObjectGuid originalCasterGUID = ObjectGuid::Empty, bool skipCheck = false);
     ~Spell();
