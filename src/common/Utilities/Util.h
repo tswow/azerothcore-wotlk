@@ -445,7 +445,10 @@ public:
 class flag96
 {
 private:
+    // @tswow-begin
+    friend class TSSpellModifier;
     uint32 part[3];
+    // @tswow-end
 
 public:
     flag96(uint32 p1 = 0, uint32 p2 = 0, uint32 p3 = 0)
